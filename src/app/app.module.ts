@@ -6,6 +6,10 @@ import { AppComponent } from './app.component';
 import { GraphComponent } from './components/graph/graph.component';
 import { ChartsModule } from 'ng2-charts';
 import { FilterComponent } from './components/filter/filter.component';
+import { HttpClientModule } from '@angular/common/http';
+
+
+
 
 @NgModule({
   declarations: [
@@ -16,7 +20,8 @@ import { FilterComponent } from './components/filter/filter.component';
   imports: [
     BrowserModule,
     AppRoutingModule,
-    ChartsModule
+    ChartsModule,
+    HttpClientModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
