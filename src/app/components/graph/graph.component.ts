@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output } from '@angular/core';
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { BaseChartDirective, Color, Label } from 'ng2-charts';
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
@@ -9,25 +9,33 @@ import * as pluginAnnotations from 'chartjs-plugin-annotation';
   styleUrls: ['./graph.component.scss']
 })
 export class GraphComponent implements OnInit {
+
   chart: any;
+  users = [];
+  firstDate: string;
+  lastDate: string;
 
-  constructor() { 
-    //BaseChartDirective.registerPlugin(annotations);
-  }
-
-  
+  constructor() {}
 
   ngOnInit(): void {
   }
 
-
   public lineChartData: ChartDataSets[] = [
-    { data: [65, 59, 80, 81, 56, 55, 40], label: 'Series A' },
-    { data: [28, 48, 40, 19, 86, 27, 90], label: 'Series B' },
-    { data: [180, 480, 770, 90, 1000, 270, 400], label: 'Series C', yAxisID: 'y-axis-1' }
-  ];
+    { data: this.users,
+      label: 'Series C',
+      yAxisID: 'y-axis-1' 
+    }];
 
-  public lineChartLabels: Label[] = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio'];
+  public lineChartLabels: Label[] = 
+  [
+    'Enero', 
+    'Febrero', 
+    'Marzo', 
+    'Abril', 
+    'Mayo', 
+    'Junio', 
+    'Julio'
+  ];
 
   public lineChartOptions: (ChartOptions & { annotation: any }) = {
     responsive: true,
@@ -36,12 +44,8 @@ export class GraphComponent implements OnInit {
       xAxes: [{}],
       yAxes: [
         {
-          id: 'y-axis-0',
-          position: 'left',
-        },
-        {
           id: 'y-axis-1',
-          position: 'right',
+          position: 'left',
           gridLines: {
             color: 'rgba(255,0,0,0.3)',
           },
@@ -101,21 +105,6 @@ export class GraphComponent implements OnInit {
   public lineChartType: ChartType = 'line';
   public lineChartPlugins = [pluginAnnotations];
 
-  
-
-  public randomize(): void {
-    for (let i = 0; i < this.lineChartData.length; i++) {
-      for (let j = 0; j < this.lineChartData[i].data.length; j++) {
-        this.lineChartData[i].data[j] = this.generateNumber(i);
-      }
-    }
-    this.chart.update();
-  }
-
-  private generateNumber(i: number): number {
-    return Math.floor((Math.random() * (i < 2 ? 100 : 1000)) + 1);
-  }
-
   // events
   public chartClicked({ event, active }: { event: MouseEvent, active: {}[] }): void {
     console.log(event, active);
@@ -124,20 +113,5 @@ export class GraphComponent implements OnInit {
   public chartHovered({ event, active }: { event: MouseEvent, active: {}[] }): void {
     console.log(event, active);
   }
-
-  public hideOne(): void {
-    const isHidden = this.chart.isDatasetHidden(1);
-    this.chart.hideDataset(1, !isHidden);
-  }
-
-  public pushOne(): void {
-    this.lineChartData.forEach((x, i) => {
-      const num = this.generateNumber(i);
-      const data: number[] = x.data as number[];
-      data.push(num);
-    });
-    this.lineChartLabels.push(`Label ${this.lineChartLabels.length}`);
-  }
-
+  
 }
-
