@@ -2,40 +2,42 @@ import { Component, Input, OnInit, Output } from '@angular/core';
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { BaseChartDirective, Color, Label } from 'ng2-charts';
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
+import { FilterService } from '../../core/services/filter/filter.service';
 
 @Component({
   selector: 'app-graph',
   templateUrl: './graph.component.html',
   styleUrls: ['./graph.component.scss']
 })
+
 export class GraphComponent implements OnInit {
 
+  @Input() public parentData;
+
   chart: any;
-  users = [];
   firstDate: string;
   lastDate: string;
+  allData = [20, 10, 8, 100, 50, 300]; //test
+  dates = ['Enero', 
+          'Febrero', 
+          'Marzo', 
+          'Abril', 
+          'Mayo', 
+          'Junio'];
 
-  constructor() {}
+  constructor(private filterService: FilterService) {}
 
   ngOnInit(): void {
+    this.fetchAllData();
   }
 
   public lineChartData: ChartDataSets[] = [
-    { data: this.users,
-      label: 'Series C',
+    { data: this.allData,
+      label: 'Sesiones',
       yAxisID: 'y-axis-1' 
     }];
 
-  public lineChartLabels: Label[] = 
-  [
-    'Enero', 
-    'Febrero', 
-    'Marzo', 
-    'Abril', 
-    'Mayo', 
-    'Junio', 
-    'Julio'
-  ];
+  public lineChartLabels: Label[] = this.dates;
 
   public lineChartOptions: (ChartOptions & { annotation: any }) = {
     responsive: true,
@@ -112,6 +114,15 @@ export class GraphComponent implements OnInit {
 
   public chartHovered({ event, active }: { event: MouseEvent, active: {}[] }): void {
     console.log(event, active);
+  }
+
+  public fetchAllData(){
+    this.filterService.getAllData()
+    .subscribe((data: any[]) => {
+      data.forEach(element => {
+        this.allData.push(element);
+      });
+    })
   }
   
 }

@@ -1,4 +1,6 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ErrorHandler, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+
 import { FilterService } from '../../core/services/filter/filter.service';
 
 
@@ -9,76 +11,79 @@ import { FilterService } from '../../core/services/filter/filter.service';
 })
 export class FilterComponent implements OnInit {
 
+  @Output() public childEvent = new EventEmitter();
+
+  form: FormGroup;
  
   companies: Array<string> = [''];
   users: Array<string> = [''];
+  dates: Array<string> = [''];
   
+  constructor(private filterService: FilterService) {
 
-  constructor(private filterService: FilterService) { }
+   }
 
   ngOnInit(): void {
-    //this.getData();
-    this.fetchTasks();
+    this.fetchFilterData();
+    this.buildForm();
+    
   }
 
-  /*companies: string[];
-
-  public fillFields(companyNames: Array<string>, username: string, interval: number){
-
-    for ( let i = 0; i< companyNames.length ; i++){
-      if (this.find(companyNames[i]) === 1){
-        this.companies.push(companyNames[i]);
-      }
-    }
-  }
-*/
-
-//Busca si la compañia existe en el array companies
-  public find(nameCompany: string): number{
-    let flag = 0;
-    for(let i = 0; i < this.companies.length ; i++){
-      let compare = nameCompany.localeCompare(this.companies[i]);
-      if (compare === 0){
-        flag = 0;
-      }else{
-        flag = 1;
-      }
-    }
-    console.log('return del flag:');
-    console.log(flag);
-    return flag;
-  }
-
-  /*async getData(){
-    const response = await fetch('assets/log.practica.2.csv');
-    const data = await response.text();
-
-    const rows = data.split(/\n/);
-    rows.forEach(elem => {
-      const row = elem.split(',');
-      const companyId = row[0];
-      const userId = row[1];
-      const time = row[3];
-      //this.users.push(userId);
-
-//Si retorna != 0 (no existe), agrega al array
-      if(!this.companies.includes(companyId)){
-        this.companies.push(companyId);
-      }else{
-        console.log('no se agregó');
-      }
-      
-
-    })
-    console.log(this.companies);
-  }
-*/
-  public fetchTasks(): void {
+  public fetchFilterData(): void {
     this.filterService.getAllCompanies()
-    .subscribe((companies: any[]) => {
-      this.companies = companies;
+    .subscribe((data: any[]) => {
+      let datos = [];
+      this.companies = data[0];
+      this.users = data[1];
+      datos = data[2];
+      for(let i=0 ; i<datos.length ; i++){
+        this.dateHourSplit(datos[i]);
+      }
       console.log(this.companies);
+      console.log(this.users);
+      console.log(this.dates);
     });
   }
+
+  public dateHourSplit(date: string){
+    let f = date.split('T');
+    this.dates.push(f[0]);
+  }
+
+
+ /* public FilteredRows(): void {
+    this.filterService.getRowsFiltered(this.form.company, this.form.user, this.form.startDate, this.form.endDate) //manda por parametro los valores obtenidos de los filtros
+    .subscribe((data: any[]) => {
+      this.sessions.push(); //array sessions debe ser pasado a graph.component.ts
+    })
+
+  }*/
+
+  private buildForm() {
+    this.form = new FormGroup({
+      company: new FormControl('', [Validators.required]),
+      user: new FormControl('', [Validators.required]),
+      startDate: new FormControl('', [Validators.required]),
+      endDate: new FormControl('', [Validators.required]),
+      date: new FormControl('', [Validators.required]),
+
+    });
+
+    /*this.form.valueChanges
+    .subscribe(value => {
+      console.log(value);
+    });*/
+  }
+
+  save(event: Event) {
+    event.preventDefault();
+    const value = this.form.value;
+    console.log(value);
+  }
+
+  /*public filter(){
+    this.childEvent.emit(array);
+  }*/
+
 
 }

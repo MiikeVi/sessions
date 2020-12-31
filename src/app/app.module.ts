@@ -7,6 +7,23 @@ import { GraphComponent } from './components/graph/graph.component';
 import { ChartsModule } from 'ng2-charts';
 import { FilterComponent } from './components/filter/filter.component';
 import { HttpClientModule } from '@angular/common/http';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+//*poner en otro modulo*
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import {MatRadioModule} from '@angular/material/radio';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatSliderModule } from '@angular/material/slider';
+import { ReactiveFormsModule } from '@angular/forms';
+
+
+
+
+import { DatepickerComponent } from './components/datepicker/datepicker.component';
+
 
 
 
@@ -15,15 +32,34 @@ import { HttpClientModule } from '@angular/common/http';
   declarations: [
     AppComponent,
     GraphComponent,
-    FilterComponent
+    FilterComponent,
+    DatepickerComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     ChartsModule,
     HttpClientModule,
+    BrowserAnimationsModule,
+    MatDatepickerModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatRadioModule,
+    MatNativeDateModule,
+    MatInputModule,
+    MatSliderModule,
+    ReactiveFormsModule
+
+
   ],
-  providers: [],
+  exports: [
+    MatFormFieldModule,
+    MatInputModule,
+
+],
+  providers: [MatNativeDateModule, MatDatepickerModule],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule { 
+
+}
