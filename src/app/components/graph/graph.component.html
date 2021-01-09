@@ -1,6 +1,6 @@
 <div class="chart-wrapper">
     <canvas 
-        baseChart width="300" height="150"
+        baseChart class="chart" width="300" height="150"
         [datasets]="lineChartData"
         [labels]="lineChartLabels"
         [options]="lineChartOptions"
@@ -11,4 +11,13 @@
         (chartHover)="chartHovered($event)"
         (chartClick)="chartClicked($event)">
     </canvas>
+</div>
+
+<div>
+    <button
+        type="button" 
+        class="btn btn-primary my-1"
+        (click)="btnUpdate()" >
+        Actualizar
+    </button>
 </div>
