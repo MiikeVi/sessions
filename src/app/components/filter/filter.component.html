@@ -26,20 +26,31 @@
 
     <div>
       <div class="row">
-        <label class="ml-3" for="interval">Intervalo Activo</label>
+        <label 
+          class="ml-3" 
+          for="interval">
+          Intervalo Activo
+        </label>
       </div>
       <div class="row ml-1">
-        <mat-slider min="1" max="60" value="15" thumbLabel tickInterval="1"></mat-slider>
+        <mat-slider 
+          formControlName="interval" 
+          min="1" 
+          max="60" 
+          value="15" 
+          thumbLabel 
+          tickInterval="1">
+        </mat-slider>
       </div>
     </div>
     
     <div class=ml-1>
-      <button 
-        type="submit" 
+      <button
+        type="submit" (click)="FilteredRows()"
         class="btn btn-primary my-1" >
         Filtrar
-    </button>
+      </button> 
+      <h3>{{info}}</h3>
     </div>
-    
   </form>
 
