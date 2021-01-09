@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
+import { Component, Input, OnInit, Output, OnChanges, SimpleChanges, SimpleChange, ViewChild } from '@angular/core';
 import { ChartDataSets, ChartOptions, ChartType } from 'chart.js';
 import { BaseChartDirective, Color, Label } from 'ng2-charts';
 import * as pluginAnnotations from 'chartjs-plugin-annotation';
@@ -13,31 +13,33 @@ import { FilterService } from '../../core/services/filter/filter.service';
 export class GraphComponent implements OnInit {
 
   @Input() public parentData;
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective;
 
-  chart: any;
+  //chart: any;
+ 
   firstDate: string;
   lastDate: string;
-  allData = [20, 10, 8, 100, 50, 300]; //test
+  allData = [];
   dates = ['Enero', 
           'Febrero', 
           'Marzo', 
           'Abril', 
           'Mayo', 
           'Junio'];
+  sessions = [5];
 
   constructor(private filterService: FilterService) {}
 
   ngOnInit(): void {
-    this.fetchAllData();
   }
 
   public lineChartData: ChartDataSets[] = [
-    { data: this.allData,
+    { data: this.sessions,
       label: 'Sesiones',
       yAxisID: 'y-axis-1' 
     }];
 
-  public lineChartLabels: Label[] = this.dates;
+  public lineChartLabels: Label[] = this.dates
 
   public lineChartOptions: (ChartOptions & { annotation: any }) = {
     responsive: true,
@@ -117,12 +119,20 @@ export class GraphComponent implements OnInit {
   }
 
   public fetchAllData(){
-    this.filterService.getAllData()
-    .subscribe((data: any[]) => {
-      data.forEach(element => {
-        this.allData.push(element);
-      });
-    })
+    return this.filterService.getSessions();
   }
-  
+
+  public btnUpdate(){
+    let arr = this.filterService.getSessions();
+    let labels = this.filterService.getLabels();
+    this.sessions.length= 0;
+    this.dates.length = 0;
+
+      for(let i = 0; i<arr.length ; i++){
+        this.sessions.push(arr[i]);
+        this.dates.push(labels[i]);
+      }
+      
+      this.chart.chart.update();
+  }
 }
